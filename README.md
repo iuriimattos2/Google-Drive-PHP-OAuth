@@ -40,3 +40,6 @@ composer install
 
 - You may have to add the credentials.json file into the root directory. 
 - Create upload/ folder to store objects to be uploaded.
+
+## Demo ##
+* [Google Drive OAuth - LankaHot.net](https://auth.lankahot.net/gdriveauth/index.php)
