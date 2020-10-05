@@ -1,60 +1,79 @@
 <?php
 
+// set logging info
+ini_set("display_errors", false);
+ini_set("error_log", "logs/logs.log");
+
+//start session
 session_start();
 
+//load composer packages
+require_once 'vendor/autoload.php';
+
+// load Uploader Class
 include "upload.php";
 
-//credentials (get those from google developer console https://console.developers.google.com/)
-$clientId = '373543127548-t3mmvto1ajocvjmt5dd9bdl8n7dicrog.apps.googleusercontent.com';
-$clientSecret = 'Pt6V43-q6WFZEGCQIK3heIaR';
-$redirectUri = 'https://lankahot.net/gdriveauth/getTocken.php';
-
-require_once 'vendor/autoload.php'; // get from here https://github.com/google/google-api-php-client.git 
-
+// create ne Google Client instance
 $client = new Google_Client();
 
-// Get your credentials from the console
-$client->setApplicationName("Get Token");
-// $client->setClientId($clientId);
-// $client->setClientSecret($clientSecret);
-// $client->setRedirectUri($redirectUri);
-
+//set credentials provided by google developer console https://console.developers.google.com/
 $client->setAuthConfig('credentials.json');
 
+// set application name
+$client->setApplicationName("Get Token");
+
+// create new gdrive instance
 $gdrive = new gdrive();
 
+// check for incoming file
 if(isset($_FILES["myFile"])){
     try{
-    		
+
+        // get incoming file information
         $file_tmp  = $_FILES["myFile"]["tmp_name"];
         $file_type = $_FILES["myFile"]["type"];
         $file_name = basename($_FILES["myFile"]["name"]);
 
+        // initialize gdrive instance
         $gdrive -> initialize($file_name);
          
 	}catch(Exception $e){
-        // exception uploading				    
+        // exception uploading
+        error_log("exception uploading: ". (string)$e);
 	}
 }
-		
+
+// set gdrive API scope
 $client->setScopes(array('https://www.googleapis.com/auth/drive.file'));
+
+// enable offline mode
 $client->setAccessType("offline");
+
+// set approval mode to force
 $client->setApprovalPrompt('force');
 
-
+// check incoming code variable.
 if (isset($_GET['code'])) {
+
+    // get the access token
     $client->authenticate($_GET['code']);
     $_SESSION['token'] = $client->getAccessToken();
+
+    // get refresh token
 	$client->getAccessToken(["refreshToken"]);
+
+	// redirect after geting required tokens
     $redirect = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
     header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
     return;
 }
 
+// check if the session token exists in incoming variables after the authentication
 if (isset($_SESSION['token'])) {
     $client->setAccessToken($_SESSION['token']);
 }
 
+// logout - unset all tokens and refresh page
 if (isset($_REQUEST['logout'])) {
     unset($_SESSION['token']);
     $client->revokeToken();
@@ -110,8 +129,7 @@ if (isset($_REQUEST['logout'])) {
             <hr class="my-4">';
             
             $gdrive -> getFiles();
-            
-		} else {
+		}else {
             $authUrl = $client->createAuthUrl();
             print "<a class='btn btn-primary btn-lg' href='$authUrl'  role='button'>Authorize Google Drive</a>";
         }

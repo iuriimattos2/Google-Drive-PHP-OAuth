@@ -6,3 +6,5 @@ token.txt
 error_log
 credentials.json
 token.txt
+.idea/
+.idea/*

@@ -15,6 +15,9 @@ These client libraries are officially supported by Google.  However, the librari
 
 For Google Cloud Platform APIs such as Datastore, Cloud Storage or Pub/Sub, we recommend using [GoogleCloudPlatform/google-cloud-php](https://github.com/googleapis/google-cloud-php) which is under active development.
 
+## OAuth workflow ##
+![Google Drive OAuth - LankaHot.net](screenshots/OAuth.png)
+
 ## Requirements ##
 * [PHP 5.4.0 or higher](https://www.php.net/)
 
@@ -41,7 +44,9 @@ composer install
 - You may have to add the credentials.json file into the root directory. 
 - Create upload/ folder to store objects to be uploaded.
 
+
+
 ## Demo ##
 * [Google Drive OAuth - LankaHot.net](https://auth.lankahot.net/gdriveauth/index.php)
 
-![Google Drive OAuth - LankaHot.net](https://github.com/asirihewage/Google-Drive-PHP-OAuth/blob/master/screenshot.png)
+![Google Drive OAuth - LankaHot.net](screenshots/screenshot.png)
